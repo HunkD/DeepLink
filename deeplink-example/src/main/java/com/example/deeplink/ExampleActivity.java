@@ -1,19 +1,22 @@
 package com.example.deeplink;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.deeplink.*;
+import com.deeplink.BindParam;
 import com.deeplink.BuildConfig;
-
-import java.util.HashMap;
+import com.deeplink.CommonRouteHandler;
+import com.deeplink.DeepLink;
+import com.deeplink.DeepLinkActivity;
 
 /**
- * @author HunkDeng
- * @since 2017/6/17
+ * How to test it?
+ *
+ * scripts
+ * adb shell
+ * am start -W -a android.intent.action.VIEW -d "http://www.example.com/home/12?strVal=str&longVal=121" com.example.deeplink
  */
 public class ExampleActivity extends AppCompatActivity {
     @BindParam("param1")
@@ -23,21 +26,15 @@ public class ExampleActivity extends AppCompatActivity {
     @BindParam
     long longVal;
 
+    // TODO: add annotation configuration
+    static {
+        DeepLinkActivity.deepLink.addRoute(new CommonRouteHandler("\\/home[\\/.]*\\/(?<param1>\\d+)$", ExampleActivity.class));
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // TODO: test code block
-        Intent intent = new Intent();
-        HashMap<String, String> params = new HashMap<>();
-        params.put("param1", "12");
-        params.put("strVal", "222zz0");
-        params.put("longVal", "20");
-        intent.putExtra(DeepLink.DEEP_LINK_PARAM, params);
-        intent.putExtra(DeepLink.FROM_DEEP_LINK, true);
-
-        DeepLink.bind(this, intent);
-
+        DeepLink.bind(this, getIntent());
         Log.d(BuildConfig.APPLICATION_ID, "intVal == 12 : " + (intVal == 12));
     }
 }

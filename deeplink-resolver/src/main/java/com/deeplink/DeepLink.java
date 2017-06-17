@@ -1,9 +1,13 @@
 package com.deeplink;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,5 +56,23 @@ public class DeepLink {
                     ReflectionHelpers.ClassParameter.from(object.getClass(), object),
                     ReflectionHelpers.ClassParameter.from(Map.class, paramMap));
         }
+    }
+
+    public Intent resolveUrl(@Nullable Uri uri, Context context) {
+        if (uri != null && !TextUtils.isEmpty(uri.toString())) {
+            for (RouteHandler handler : routeHandlers) {
+                Intent intent = handler.handle(uri, context);
+                if (intent != null) {
+                    return intent;
+                }
+            }
+        }
+        return null;
+    }
+
+    private ArrayList<RouteHandler> routeHandlers = new ArrayList<>();
+
+    public void addRoute(RouteHandler routeHandler) {
+        routeHandlers.add(routeHandler);
     }
 }
