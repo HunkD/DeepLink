@@ -35,6 +35,29 @@ public class DeepLinkAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        bindParam(set, roundEnvironment);
+        bindType(set, roundEnvironment);
+        return false;
+    }
+
+    private void bindType(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
+        BindingLinkSet bindingLinkSet = new BindingLinkSet();
+        for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(BindLink.class)) {
+            if (annotatedElement instanceof TypeElement) {
+                TypeElement typeElement = (TypeElement) annotatedElement;
+                bindingLinkSet.add(typeElement);
+            }
+        }
+        JavaFile javaFile = bindingLinkSet.brewJava();
+        // write java file
+        try {
+            javaFile.writeTo(env.getFiler());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void bindParam(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         Map<TypeElement, BindingSet> bindingMap = new HashMap<>();
         // remapping class to variables
         for (Element annotatedElement : roundEnvironment.getElementsAnnotatedWith(BindParam.class)) {
@@ -65,7 +88,6 @@ public class DeepLinkAnnotationProcessor extends AbstractProcessor {
                 e.printStackTrace();
             }
         }
-        return false;
     }
 
     @Override

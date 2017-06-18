@@ -14,12 +14,14 @@ import java.util.List;
 
 public class DeepLinkActivity extends Activity {
 
-    public static DeepLink deepLink = new DeepLink();
+    public DeepLink deepLink = new DeepLink();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        // inject the url configuration if need
+        DeepLink.initIfNeed();
+        // extract intent data uri
         Uri uri = getIntent().getData();
         if (uri != null) {
         }
