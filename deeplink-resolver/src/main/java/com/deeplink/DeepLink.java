@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ public class DeepLink {
     public static final String FROM_DEEP_LINK = "FROM_DEEP_LINK";
     public static final String DEEP_LINK_PARAM = "DEEP_LINK_PARAM";
     private static Map<Class<?>, Object> BINDINGS = new HashMap<>();
+    private static boolean INITED;
 
     public static void bind(@NonNull Object object, @Nullable Intent intent) {
         if (intent == null
@@ -70,9 +72,26 @@ public class DeepLink {
         return null;
     }
 
-    private ArrayList<RouteHandler> routeHandlers = new ArrayList<>();
+    private static ArrayList<RouteHandler> routeHandlers = new ArrayList<>();
 
-    public void addRoute(RouteHandler routeHandler) {
+    public static void addRoute(RouteHandler routeHandler) {
         routeHandlers.add(routeHandler);
+    }
+
+    public static synchronized void initIfNeed() {
+        if (INITED) {
+            return;
+        }
+        try {
+            Object deepLinkConfig = Class.forName("com.deeplink.DeepLinkConfig").newInstance();
+//            routeHandlers.addAll((Collection<? extends RouteHandler>) ReflectionHelpers.callInstanceMethod(deepLinkConfig, "getConfig"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        INITED = true;
     }
 }
