@@ -80,6 +80,7 @@ public class DeepLinkAnnotationProcessor extends AbstractProcessor {
             BindingSet bindingSet = entry.getValue();
             // build
             bindingSet.parse(typeElement);
+            bindingSet.setTypes(env.getTypeUtils());
             JavaFile javaFile = bindingSet.brewJava();
             // write java file
             try {
