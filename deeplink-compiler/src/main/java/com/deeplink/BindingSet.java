@@ -5,8 +5,10 @@ import com.deeplink.typebinder.FloatTypeBinder;
 import com.deeplink.typebinder.IntTypeBinder;
 import com.deeplink.typebinder.LongTypeBinder;
 import com.deeplink.typebinder.ShortTypeBinder;
+import com.deeplink.typebinder.StrListTypeBinder;
 import com.deeplink.typebinder.StringTypeBinder;
 import com.deeplink.typebinder.TypeBinder;
+import com.google.common.reflect.TypeToken;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -22,6 +24,8 @@ import java.util.Map;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 
 import static com.google.auto.common.MoreElements.getPackage;
 
@@ -44,7 +48,11 @@ class BindingSet {
         typeBinderMap.put(short.class.getName(), new ShortTypeBinder());
         typeBinderMap.put(float.class.getName(), new FloatTypeBinder());
         typeBinderMap.put(boolean.class.getName(), new BooleanTypeBinder());
+        typeBinderMap.put(List.class.getName(), new StrListTypeBinder());
+        typeBinderMap.put(String[].class.getName(), new BooleanTypeBinder());
     }
+
+    private Types typeUtils;
 
     void add(VariableElement annotatedElement) {
         variableElementList.add(annotatedElement);
@@ -53,7 +61,8 @@ class BindingSet {
     JavaFile brewJava() {
         ClassName map = ClassName.get("java.util", "Map");
         ClassName string = ClassName.get("java.lang", "String");
-        ParameterSpec parameterSpec = ParameterSpec.builder(ParameterizedTypeName.get(map, string, string), "param")
+        ClassName urlParam = ClassName.get("com.deeplink", "UrlParam");
+        ParameterSpec parameterSpec = ParameterSpec.builder(ParameterizedTypeName.get(map, string, urlParam), "param")
                 .build();
         // create method
         MethodSpec.Builder methodSpecBuilder = MethodSpec.methodBuilder("bind")
@@ -65,10 +74,10 @@ class BindingSet {
             BindParam bindParam = variableElement.getAnnotation(BindParam.class);
             String bindKey = bindParam.value();
             String paramName = variableElement.getSimpleName().toString();
-            if (bindKey == null || bindKey.trim().equals("")) {
+            if (bindKey.trim().equals("")) {
                 bindKey = paramName;
             }
-            TypeBinder typeBinder = getTypeBinder(variableElement.asType().toString());
+            TypeBinder typeBinder = getTypeBinder(variableElement.asType());
             if (typeBinder != null) {
                 typeBinder.addStatement(methodSpecBuilder, paramName, bindKey);
             } else {
@@ -85,8 +94,8 @@ class BindingSet {
                 .build();
     }
 
-    private TypeBinder getTypeBinder(String typeString) {
-        return typeBinderMap.get(typeString);
+    private TypeBinder getTypeBinder(TypeMirror type) {
+        return typeBinderMap.get(typeUtils.erasure(type).toString());
     }
 
     void parse(TypeElement typeElement) {
@@ -95,5 +104,9 @@ class BindingSet {
         className = typeElement.getQualifiedName().toString().substring(
                 packageName.length() + 1).replace('.', '$');
         bindingClassName = ClassName.get(packageName, className + "_DeepLinkBinder");
+    }
+
+    public void setTypes(Types typeUtils) {
+        this.typeUtils = typeUtils;
     }
 }

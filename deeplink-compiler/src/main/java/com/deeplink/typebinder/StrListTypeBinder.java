@@ -4,11 +4,11 @@ import com.squareup.javapoet.MethodSpec;
 
 /**
  * @author HunkDeng
- * @since 2017/6/17
+ * @since 2017/6/19
  */
-public class FloatTypeBinder implements TypeBinder {
+public class StrListTypeBinder implements TypeBinder {
     @Override
     public void addStatement(MethodSpec.Builder methodSpecBuilder, String paramName, String bindKey) {
-        methodSpecBuilder.addStatement("obj.$L = Float.valueOf(param.get($S).first)", paramName, bindKey);
+        methodSpecBuilder.addStatement("obj.$L = param.get($S).list", paramName, bindKey);
     }
 }

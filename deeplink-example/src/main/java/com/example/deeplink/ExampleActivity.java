@@ -8,9 +8,9 @@ import android.util.Log;
 import com.deeplink.BindLink;
 import com.deeplink.BindParam;
 import com.deeplink.BuildConfig;
-import com.deeplink.CommonRouteHandler;
 import com.deeplink.DeepLink;
-import com.deeplink.DeepLinkActivity;
+
+import java.util.List;
 
 /**
  * How to test it?
@@ -27,6 +27,8 @@ public class ExampleActivity extends AppCompatActivity {
     String strVal;
     @BindParam
     long longVal;
+    @BindParam
+    List<String> stringList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

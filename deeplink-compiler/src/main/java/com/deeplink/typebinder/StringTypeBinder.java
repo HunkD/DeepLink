@@ -9,6 +9,6 @@ import com.squareup.javapoet.MethodSpec;
 public class StringTypeBinder implements TypeBinder {
     @Override
     public void addStatement(MethodSpec.Builder methodSpecBuilder, String paramName, String bindKey) {
-        methodSpecBuilder.addStatement("obj.$L = param.get($S)", paramName, bindKey);
+        methodSpecBuilder.addStatement("obj.$L = param.get($S).first", paramName, bindKey);
     }
 }

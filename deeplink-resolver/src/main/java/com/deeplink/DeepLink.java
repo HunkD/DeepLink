@@ -84,7 +84,6 @@ public class DeepLink {
         }
         try {
             Object deepLinkConfig = Class.forName("com.deeplink.DeepLinkConfig").newInstance();
-//            routeHandlers.addAll((Collection<? extends RouteHandler>) ReflectionHelpers.callInstanceMethod(deepLinkConfig, "getConfig"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
