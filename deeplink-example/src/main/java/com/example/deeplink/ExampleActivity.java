@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.deeplink.BindLink;
 import com.deeplink.BindParam;
-import com.deeplink.BuildConfig;
 import com.deeplink.DeepLink;
 
 import java.util.List;
