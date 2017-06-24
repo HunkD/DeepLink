@@ -8,7 +8,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -16,6 +16,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -26,7 +29,11 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    compile project(path: ':deeplink-annotation')
+
     compile project(path: ':deeplink-resolver')
     annotationProcessor project(path: ':deeplink-compiler')
+
+//    compile 'com.deeplink:deeplink-annotation:1.0.0'
+//    compile 'com.deeplink:deeplink-resolver:1.0.0'
+//    annotationProcessor 'com.deeplink:deeplink-compiler:1.0.0'
 }
