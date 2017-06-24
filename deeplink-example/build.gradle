@@ -31,6 +31,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile project(path: ':deeplink-resolver')
+    compile project(path: ':deeplink-annotation')
     annotationProcessor project(path: ':deeplink-compiler')
 
 //    compile 'com.deeplink:deeplink-annotation:1.0.0'

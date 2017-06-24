@@ -9,6 +9,8 @@ import com.squareup.javapoet.MethodSpec;
 public class BooleanTypeBinder implements TypeBinder {
     @Override
     public void addStatement(MethodSpec.Builder methodSpecBuilder, String paramName, String bindKey) {
+        methodSpecBuilder.beginControlFlow("if (param.get($S) != null) ", bindKey);
         methodSpecBuilder.addStatement("obj.$L = Boolean.valueOf(param.get($S).first)", paramName, bindKey);
+        methodSpecBuilder.endControlFlow();
     }
 }
