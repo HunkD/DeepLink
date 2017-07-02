@@ -8,9 +8,6 @@ dependencies {
     compile 'com.google.auto:auto-common:0.6'
 }
 
-sourceCompatibility = "1.7"
-targetCompatibility = "1.7"
-
 publish {
     repoName = rootProject.repoName
     groupId = rootProject.groupId

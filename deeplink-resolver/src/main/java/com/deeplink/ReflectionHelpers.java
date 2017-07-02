@@ -298,7 +298,9 @@ public class ReflectionHelpers {
     public static <T> T newInstance(Class<T> cl) {
         try {
             return cl.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
