@@ -74,6 +74,6 @@ public class DeepLinkActivity extends Activity {
     }
 
     private static String getRuntimePackageName(Context context) {
-        return null;
+        return context.getApplicationContext().getPackageName();
     }
 }
