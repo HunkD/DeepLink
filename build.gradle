@@ -27,7 +27,7 @@ ext {
     repoName = 'DeepLink'
     userOrg = 'hunkd0202'
     groupId = 'com.deeplink'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = 'Bind parameter in deeplink url via annotation'
     website = 'https://github.com/HunkD/DeepLink'
 }
