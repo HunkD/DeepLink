@@ -33,13 +33,13 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
 
-//    compile project(path: ':deeplink-resolver')
-//    compile project(path: ':deeplink-annotation')
-//    annotationProcessor project(path: ':deeplink-compiler')
+    compile project(path: ':deeplink-resolver')
+    compile project(path: ':deeplink-annotation')
+    annotationProcessor project(path: ':deeplink-compiler')
 
-    compile 'com.deeplink:deeplink-annotation:1.0.1'
-    compile 'com.deeplink:deeplink-resolver:1.0.1'
-    annotationProcessor 'com.deeplink:deeplink-compiler:1.0.1'
+//    compile 'com.deeplink:deeplink-annotation:1.0.1'
+//    compile 'com.deeplink:deeplink-resolver:1.0.1'
+//    annotationProcessor 'com.deeplink:deeplink-compiler:1.0.1'
 }
 repositories {
     mavenCentral()
