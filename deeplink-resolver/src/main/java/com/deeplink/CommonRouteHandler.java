@@ -8,11 +8,10 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.code.regexp.Matcher;
-import com.google.code.regexp.Pattern;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,13 +49,9 @@ public class CommonRouteHandler implements RouteHandler {
             return intent;
         }
         //
-        if (path.matches(regex)) {
+        if (isMatch(uri, regex)) {
             // get parameter in path segments
-            Pattern p = Pattern.compile(regex);
-            final Matcher m = p.matcher(path);
-            m.find();
-            Map<String, String> namedGroups = m.namedGroups();
-            params.putAll(convert(namedGroups));
+            params.putAll(findParameterInPath(uri, regex));
             // get parameter in query
             Set<String> queryParameterNames = uri.getQueryParameterNames();
             for (String name : queryParameterNames) {
@@ -79,6 +74,53 @@ public class CommonRouteHandler implements RouteHandler {
         } else {
             return null;
         }
+    }
+
+    private Map<String, UrlParam> findParameterInPath(Uri uri, String regex) {
+        Map<String, UrlParam> urlParamMap = new HashMap<>();
+        List<String> uriPathSegments = uri.getPathSegments();
+        List<String> regexSegments =  new ArrayList<>(Arrays.asList(regex.split("/")));
+        regexSegments.remove(0);
+        for (int i = 0; i < uriPathSegments.size(); i++) {
+            String actual = uriPathSegments.get(i);
+            String expect = regexSegments.get(i);
+            if (isParameter(expect)) {
+                int length = expect.length();
+                String key = expect.substring(1, length - 1);
+                UrlParam urlParam = urlParamMap.get(key);
+                if (urlParam == null) {
+                    urlParam = UrlParam.from(actual);
+                    urlParamMap.put(key, urlParam);
+                } else {
+                    urlParam.list.add(actual);
+                }
+            }
+        }
+        return urlParamMap;
+    }
+
+    private boolean isMatch(Uri uri, String regex) {
+        List<String> uriPathSegments = uri.getPathSegments();
+        List<String> regexSegments = new ArrayList<>(Arrays.asList(regex.split("/")));
+        regexSegments.remove(0);
+        if (uriPathSegments.size() != regexSegments.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < uriPathSegments.size(); i++) {
+            String actual = uriPathSegments.get(i);
+            String expect = regexSegments.get(i);
+            if (!isParameter(expect)) {
+                if (!actual.equals(expect)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean isParameter(String expect) {
+        return expect.startsWith("{") && expect.endsWith("}");
     }
 
     private Map<String, UrlParam> convert(@NonNull Map<String, String> strMap) {

@@ -39,7 +39,7 @@ public class BindingLinkSet {
                         url, packageName + "." + className);
             }
         }
-        // create class **_DeepLinkBinder.java
+        // create class DeepLinkConfig.java
         ClassName className = ClassName.get(packageName, javaClassName);
         TypeSpec typeSpec = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
