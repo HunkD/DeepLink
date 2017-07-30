@@ -1,1 +1,1 @@
-include ':deeplink-example', ':deeplink-resolver', ':deeplink-annotation', ':deeplink-compiler'
+include ':deeplink-example', ':deeplink-resolver', ':deeplink-annotation', ':deeplink-compiler', ':event-match'
